@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>App Chat</title>
+
+    <link rel="stylesheet" href="style.css" />
+    <script src="/socket.io/socket.io.js"></script>
+    <style>
+        #message-input { 
+    border: 1px; 
+    padding: 0 1rem; 
+    flex-grow: 1; 
+    border-radius: 2rem; 
+    margin: 0.25rem; 
+}
+      #message-form { background: rgba(0, 0, 0, 0.15); padding: 0.25rem; position: fixed; bottom: 0; left: 0; right: 0; display: flex; height: 3rem; box-sizing: border-box; backdrop-filter: blur(10px); }
+      #input:focus { outline: none; }
+      #message-form > button { background: #333; border: none; padding: 0 1rem; margin: 0.25rem; border-radius: 3px; outline: none; color: #fff; }
+      #messages-container { list-style-type: none; margin: 0; padding: 0; border: #333; height: 100%; size: 15px; background-color: #333; color: #fff;}
+    </style>
+</head>
+<body>
+
+    <h1>holle</h1>
+    <div id="messages-container"></div>
+
+<form id="message-form">
+    <input type="text" name="message" id="message-input" placeholder="Type your message">
+    <button type="submit">Send</button>
+</form>
+
+<script>
+    const socket = window.io()
+    const msgForm = document.querySelector('#message-form') 
+    const msgInput = document.querySelector('#message-input')
+    const msgsContainer = document.querySelector('#messages-container')
+
+
+
+    msgForm.onsubmit = e => {
+        e.preventDefault();
+        const msg = msgInput.value;
+
+        socket.emit('send-message', { msg })
+        msgInput.value = ''
+    }
+
+    socket.on('send-message', ({ msg }) => {
+        msgsContainer.innerHTML += `<p>${msg}</p>`
+    })
+</script>
+    <script src="server.js"></script>
+
+</body>
+</html>
